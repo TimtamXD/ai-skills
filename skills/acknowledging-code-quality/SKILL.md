@@ -107,7 +107,7 @@ Every line a command prints is read again on every later turn, so noisy checks b
 - **Errors:** fail fast with specific errors and validate at boundaries. No swallowed exceptions.
 - **No magic numbers or strings:** use named constants.
 - **No dead or commented-out code.**
-- **Styled components, DRY styling.** Style UI with styled components (`styled-components` or the project's equivalent) built on shared theme tokens for colour, spacing and type. No inline `style={{}}` objects, no copy-pasted CSS: a style used twice becomes one shared styled component. Enforce it with a lint rule.
+- **Shared UI components, DRY styling.** Build screens from shared, reusable UI components (`Card`, `MoneyFigure`, …) on shared theme tokens for colour, spacing and type, keeping the project's own styling system (e.g. Tailwind). No inline `style={{}}` objects and no repeated class strings or markup: anything used twice becomes one shared component. Enforce it with a lint rule.
 - **Structure the data:** use structured data, not string parsing standing in for it.
 - **Enforce with tools:** where a project can enforce these rules with a lint rule or a test, add one.
 
@@ -157,7 +157,7 @@ If the agent isn't installed or subagents aren't available, follow agents/wcgw.m
 - [ ] Full suite, linter, type checker and duplication check all pass, locally, in one final quiet run (section 2a)
 - [ ] wcgw agent run on the diff; every breakage proven by a failing test, then fixed
 - [ ] Full-word names, types apart from logic, short files and functions
-- [ ] UI styled with shared styled components and theme tokens; no inline styles or repeated CSS
+- [ ] UI built from shared components on theme tokens; no inline styles or repeated styling
 - [ ] Dependencies point inward; no business logic in adapters
 - [ ] No comments beyond `why:` lines and tool directives; the no-comment check passes
 
