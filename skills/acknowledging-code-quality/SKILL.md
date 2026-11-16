@@ -1,6 +1,6 @@
 ---
 name: acknowledging-code-quality
-description: Use for ANY coding request (new features, bug fixes, refactors, scripts) in any repo. Test-first TDD, tests a product manager can read, clean code and clean architecture, and every reply opens with the [acknowledging-code-quality] line so the person can see the rules are being followed.
+description: Use for ANY coding request (new features, bug fixes, refactors, scripts) in any repo, and when asked for a wcgw review of a PR, branch or file. Test-first TDD, tests a product manager can read, clean code and clean architecture, a wcgw review of what will go wrong before work is called done, and every reply opens with the [acknowledging-code-quality] line so the person can see the rules are being followed.
 ---
 
 # Acknowledging code quality
@@ -30,7 +30,7 @@ For every change, however small:
 2. **Red.** Write the failing tests first. Run them and confirm they fail for the right reason.
 3. **Green.** Write the minimum code that makes them pass.
 4. **Refactor.** Remove duplication, improve names and split responsibilities. Tests stay green throughout.
-5. **Verify.** Run the full suite, linter, type checker and duplication check before calling it done. Never report work as complete with failing or skipped tests.
+5. **Verify.** Run the full suite, linter, type checker and duplication check, then the wcgw review (section 9), before calling it done. Never report work as complete with failing or skipped tests.
 
 A bug fix starts with a test that reproduces the bug. Every mistake becomes a rule plus a regression test, so that class of mistake can't come back.
 
@@ -110,15 +110,33 @@ If a project lacks a layer it needs, set it up rather than skip it. Run the suit
 3. Never change behaviour and structure in the same step.
 4. Commit in small, reviewable increments.
 
-## 9. Definition of done
+## 9. wcgw review: what will go wrong?
+
+Before calling a change done, and whenever someone asks for a wcgw review of a PR, branch or file, have a fresh subagent answer one question: what will go wrong? Brief it with [wcgw.md](wcgw.md) and give it the target, if there is one. A fresh agent hasn't seen your reasoning, so it reads the change the way a reviewer will.
+
+- It only reads. It reports outcomes it can prove from the spec, a test or a call site, and never suggests a fix.
+- Finding nothing is a valid result.
+- Each finding is one plain sentence, ready to post as an inline PR comment and signed `-- wcgw`.
+
+Act on the report:
+
+1. Turn each `Breaking change:` into a failing test, then fix it (section 1).
+2. Settle each `Note:` and unverified item with the steps or artifact it names, or ask its closing question.
+3. Fix each nitpick: a name or comment the change made false.
+4. Post nothing to a PR unless the person asks.
+
+If subagents aren't available, follow wcgw.md yourself and say so.
+
+## 10. Definition of done
 
 - [ ] Failure modes listed, and each covered by a test
 - [ ] Tests written first and seen failing
 - [ ] Unit, integration, end-to-end and (for UI) Playwright coverage as appropriate
 - [ ] A non-programmer could read the test names and bodies and follow them
 - [ ] Full suite, linter, type checker and duplication check all pass, locally
+- [ ] wcgw review run; every `Breaking change:` fixed test-first and every `Note:` settled
 - [ ] Full-word names, types apart from logic, short files and functions
 - [ ] Dependencies point inward; no business logic in adapters
 - [ ] No redundant comments
 
-When reporting back, open with the tag. Then say what the tests cover (behaviours and failure modes), then the code change, then anything that wasn't test-first or was skipped.
+When reporting back, open with the tag. Then say what the tests cover (behaviours and failure modes), then the code change, then what the wcgw review found and what was done about each finding, then anything that wasn't test-first or was skipped.
