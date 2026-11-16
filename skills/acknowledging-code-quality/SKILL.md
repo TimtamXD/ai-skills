@@ -32,6 +32,12 @@ For every change, however small:
 4. **Refactor.** Remove duplication, improve names and split responsibilities. Tests stay green throughout.
 5. **Verify.** Run the full suite, linter, type checker and duplication check, then the wcgw review (section 9), before calling it done. Never report work as complete with failing or skipped tests.
 
+**Real TDD, no faking.** A test written after its code, or one that passes the first time it runs, proves nothing.
+- Run every new test before its code exists, and see it fail for the right reason: the missing behaviour, not a typo, a missing import or a broken setup.
+- A test that passes on its first run is suspect. Break the code on purpose (or check out the code without the change) and confirm the test catches it, or rewrite the test until it can fail.
+- Never write the code and its test together and call it test-first.
+- If a slip happens, say so plainly, then redo it properly: take the code out, watch the test fail, put the code back.
+
 A bug fix starts with a test that reproduces the bug. Every mistake becomes a rule plus a regression test, so that class of mistake can't come back.
 
 ## 2. Test layers
@@ -130,7 +136,7 @@ If the agent isn't installed or subagents aren't available, follow agents/wcgw.m
 ## 10. Definition of done
 
 - [ ] Failure modes listed, and each covered by a test
-- [ ] Tests written first and seen failing
+- [ ] Tests written first and seen failing for the right reason; none faked or written after the code
 - [ ] Unit, integration, end-to-end and (for UI) Playwright coverage as appropriate
 - [ ] A non-programmer could read the test names and bodies and follow them
 - [ ] Full suite, linter, type checker and duplication check all pass, locally
