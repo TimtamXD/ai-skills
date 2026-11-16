@@ -13,7 +13,9 @@ Copy a skill folder into your Claude skills directory:
 
 ```bash
 git clone https://github.com/TimtamXD/ai-skills.git
+mkdir -p ~/.claude/skills ~/.claude/agents
 cp -r ai-skills/skills/* ~/.claude/skills/
+cp ai-skills/agents/* ~/.claude/agents/
 ```
 
-On Windows, copy the folders into `%USERPROFILE%\.claude\skills\`. Claude Code picks them up in new sessions. Each folder holds a `SKILL.md`, plus any brief it points to, such as `wcgw.md`.
+On Windows, copy the skill folders into `%USERPROFILE%\.claude\skills\` and the agents into `%USERPROFILE%\.claude\agents\`. Claude Code picks them up in new sessions. Each skill folder holds one `SKILL.md`. `agents/` holds the `wcgw` agent that `acknowledging-code-quality` runs.

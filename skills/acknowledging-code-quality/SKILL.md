@@ -112,20 +112,20 @@ If a project lacks a layer it needs, set it up rather than skip it. Run the suit
 
 ## 9. wcgw review: what will go wrong?
 
-Before calling a change done, and whenever someone asks for a wcgw review of a PR, branch or file, have a fresh subagent answer one question: what will go wrong? Brief it with [wcgw.md](wcgw.md) and give it the target, if there is one. A fresh agent hasn't seen your reasoning, so it reads the change the way a reviewer will.
+Before calling a change done, and whenever someone asks for a wcgw review of a PR, branch or file, run the `wcgw` agent ([agents/wcgw.md](../../agents/wcgw.md)), one per PR, scoped to the change's own diff against its base. It reads other branches with `git show origin/<head>:<path>`, and doesn't check out branches or add worktrees. A fresh agent hasn't seen your reasoning, so it reads the change the way a reviewer will.
 
-- It only reads. It reports outcomes it can prove from the spec, a test or a call site, and never suggests a fix.
-- Finding nothing is a valid result.
-- Each finding is one plain sentence, ready to post as an inline PR comment and signed `-- wcgw`.
+It only reads, reports only breakages it can prove from the spec, a test or a call site, and never suggests a fix. Finding nothing is a valid result.
 
-Act on the report:
+Prove each breakage before acting on it:
 
-1. Turn each `Breaking change:` into a failing test, then fix it (section 1).
-2. Settle each `Note:` and unverified item with the steps or artifact it names, or ask its closing question.
-3. Fix each nitpick: a name or comment the change made false.
-4. Post nothing to a PR unless the person asks.
+1. If it's unsure whether it bites, such as a `Note:` that turns on data, check production data first.
+2. Write a unit test that fails on the change's head.
+3. On your own change, keep the test and fix the code (section 1). On someone else's PR, put the test and its failure output in the comment, then delete the test.
+4. Skip the test only when the bug is obvious from reading the code.
 
-If subagents aren't available, follow wcgw.md yourself and say so.
+A finding posted to a PR ends with `--wcgw` on its own line. Post nothing unless the person asks.
+
+If the agent isn't installed or subagents aren't available, follow agents/wcgw.md yourself and say so.
 
 ## 10. Definition of done
 
@@ -134,7 +134,7 @@ If subagents aren't available, follow wcgw.md yourself and say so.
 - [ ] Unit, integration, end-to-end and (for UI) Playwright coverage as appropriate
 - [ ] A non-programmer could read the test names and bodies and follow them
 - [ ] Full suite, linter, type checker and duplication check all pass, locally
-- [ ] wcgw review run; every `Breaking change:` fixed test-first and every `Note:` settled
+- [ ] wcgw agent run on the diff; every breakage proven by a failing test, then fixed
 - [ ] Full-word names, types apart from logic, short files and functions
 - [ ] Dependencies point inward; no business logic in adapters
 - [ ] No redundant comments
