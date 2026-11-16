@@ -27,6 +27,10 @@ Ten reviewers look at the same work from different angles, in parallel, and you 
 
 Name the chosen reviewers in the reply, so it's clear who looked and who didn't.
 
+**Unanchored advice check, before any recommendation reaches Tim.** The panel above checks whether the plan's numbers are right inside the plan's own framing. It can't see when the framing itself is wrong. So, separately, one wealth-growth/planner reviewer gets only Tim's raw facts: balances, each debt with its rate, income, monthly spending, savings rates and goals with their dates. It gets no plan, no options and no proposed answer. Ask it: "What is the best next move with this money, and in what order?" Compare its answer with the recommendation. Any disagreement on what to do first, or on the order, blocks the recommendation until it's resolved and explained to Tim. Never show this reviewer the plan, even to "help". Added 2026-11-16, after the whole panel missed the 22% card problem because nobody questioned the buffer-first framing.
+
+**Debt is always compared with savings.** Before any recommendation that involves debt (a payoff pace, a buffer before debt, a fill order), compare the debt's interest rate with the savings rate. If the debt costs more and savings above the minimum floor can clear it, the recommendation is to pay it off now, showing the interest saved against any bonus lost. A blank debt rate blocks the recommendation until it's known. Never assume a rate. This applies to Claude's own replies to Tim as well as to reviewers. Tim was told on 2026-11-16 to pay a 22% card over 12 months while $10k sat in savings, which was wrong.
+
 ## When to use it
 
 - Auditing the app ("what should we cut, merge or move?").
