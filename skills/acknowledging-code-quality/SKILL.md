@@ -1,6 +1,6 @@
 ---
 name: acknowledging-code-quality
-description: Use for ANY coding request (new features, bug fixes, refactors, scripts) in any repo. Test-first TDD, tests a product manager can read, clean code and clean architecture, and every reply opens with the [acknowledging-code-quality] line so the person can see the rules are being followed.
+description: Use for ANY coding request (new features, bug fixes, refactors, scripts) in any repo, and when asked for a wcgw review of a PR, branch or file. Test-first TDD, tests a product manager can read, clean code and clean architecture, a wcgw review of what will go wrong before work is called done, and every reply opens with the [acknowledging-code-quality] line so the person can see the rules are being followed.
 ---
 
 # Acknowledging code quality
@@ -30,7 +30,7 @@ For every change, however small:
 2. **Red.** Write the failing tests first. Run them and confirm they fail for the right reason.
 3. **Green.** Write the minimum code that makes them pass.
 4. **Refactor.** Remove duplication, improve names and split responsibilities. Tests stay green throughout.
-5. **Verify.** Run the full suite, linter, type checker and duplication check before calling it done. Never report work as complete with failing or skipped tests.
+5. **Verify.** Run the full suite, linter, type checker and duplication check, then the wcgw review (section 9), before calling it done. Never report work as complete with failing or skipped tests.
 
 A bug fix starts with a test that reproduces the bug. Every mistake becomes a rule plus a regression test, so that class of mistake can't come back.
 
@@ -110,15 +110,33 @@ If a project lacks a layer it needs, set it up rather than skip it. Run the suit
 3. Never change behaviour and structure in the same step.
 4. Commit in small, reviewable increments.
 
-## 9. Definition of done
+## 9. wcgw review: what will go wrong?
+
+Before calling a change done, and whenever someone asks for a wcgw review of a PR, branch or file, run the `wcgw` agent ([agents/wcgw.md](../../agents/wcgw.md)), one per PR, scoped to the change's own diff against its base. It reads other branches with `git show origin/<head>:<path>`, and doesn't check out branches or add worktrees. A fresh agent hasn't seen your reasoning, so it reads the change the way a reviewer will.
+
+It only reads, reports only breakages it can prove from the spec, a test or a call site, and never suggests a fix. Finding nothing is a valid result.
+
+Prove each breakage before acting on it:
+
+1. If it's unsure whether it bites, such as a `Note:` that turns on data, check production data first.
+2. Write a unit test that fails on the change's head.
+3. On your own change, keep the test and fix the code (section 1). On someone else's PR, put the test and its failure output in the comment, then delete the test.
+4. Skip the test only when the bug is obvious from reading the code.
+
+A finding posted to a PR ends with `--wcgw` on its own line. Post nothing unless the person asks.
+
+If the agent isn't installed or subagents aren't available, follow agents/wcgw.md yourself and say so.
+
+## 10. Definition of done
 
 - [ ] Failure modes listed, and each covered by a test
 - [ ] Tests written first and seen failing
 - [ ] Unit, integration, end-to-end and (for UI) Playwright coverage as appropriate
 - [ ] A non-programmer could read the test names and bodies and follow them
 - [ ] Full suite, linter, type checker and duplication check all pass, locally
+- [ ] wcgw agent run on the diff; every breakage proven by a failing test, then fixed
 - [ ] Full-word names, types apart from logic, short files and functions
 - [ ] Dependencies point inward; no business logic in adapters
 - [ ] No redundant comments
 
-When reporting back, open with the tag. Then say what the tests cover (behaviours and failure modes), then the code change, then anything that wasn't test-first or was skipped.
+When reporting back, open with the tag. Then say what the tests cover (behaviours and failure modes), then the code change, then what the wcgw review found and what was done about each finding, then anything that wasn't test-first or was skipped.
