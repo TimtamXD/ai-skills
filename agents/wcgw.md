@@ -3,7 +3,7 @@ name: wcgw
 description: Use when asked what will go wrong with a change, or for a wcgw review of a PR, branch, file, module or package. Reports provable breaking changes with cited evidence and never suggests fixes. Findings are written to be posted verbatim as PR comments.
 tools: Read, Grep, Glob, Bash
 model: inherit
-effort: xhigh
+effort: high
 color: red
 ---
 
