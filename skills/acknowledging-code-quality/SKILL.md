@@ -27,10 +27,10 @@ For every change, however small:
    - network failure, timeouts and partial failure
    - concurrency and permissions
    - large inputs
-2. **Red.** Write the failing tests first. Run them and confirm they fail for the right reason.
-3. **Green.** Write the minimum code that makes them pass.
-4. **Refactor.** Remove duplication, improve names and split responsibilities. Tests stay green throughout.
-5. **Verify.** Run the full suite, linter, type checker and duplication check, then the wcgw review (section 9), before calling it done. Never report work as complete with failing or skipped tests.
+2. **Red.** Write the failing tests first. Run only those test files and confirm they fail for the right reason.
+3. **Green.** Write the minimum code that makes them pass. Re-run only the affected test files.
+4. **Refactor.** Remove duplication, improve names and split responsibilities. Tests stay green throughout (affected files only).
+5. **Verify.** Run the full suite, linter, type checker and duplication check once, when the change is finished, then the wcgw review (section 9), before calling it done. Never report work as complete with failing or skipped tests.
 
 **Real TDD, no faking.** A test written after its code, or one that passes the first time it runs, proves nothing.
 - Run every new test before its code exists, and see it fail for the right reason: the missing behaviour, not a typo, a missing import or a broken setup.
@@ -53,6 +53,19 @@ Use every layer the project needs, in pyramid proportions: many unit, fewer inte
   - No fixed sleeps; wait on conditions.
 
 If a project lacks a layer it needs, set it up rather than skip it. Run the suites locally before every merge; don't spend CI minutes on full suites.
+
+## 2a. Keep checks cheap
+
+Every line a command prints is read again on every later turn, so noisy checks burn the usage limit. The rules stay; only the cost goes.
+
+- **Quiet output, failures only.** Send every test, build and gate run to a log file and print a summary: the pass/fail counts plus at most 30 failure lines (`> run.log 2>&1; grep -E "FAIL|×|✘|Error" run.log | head -30; tail -3 run.log`). Use quiet reporters (`vitest --reporter=dot`, `playwright --reporter=dot`). Print a build's exit code and its errors, never the route table.
+- **Never read a whole log.** No `cat` of a log, a test output or a saved tool result. Grep it, or read the last 30 lines. The same goes for an "output too large" file: grep it for what you need.
+- **Run the narrowest check that answers the question.** While working, run the one or two test files you are changing. Run the full suite, build and Playwright once before merge, and again only if code changed after that run. If a run fails, re-run just the failing files until they pass, then the full suite once more.
+- **Heavy gates run once per merge.** Real-data gates, old-vs-new comparisons and mutation runs are proof for the merge, not a loop. Run each once on the finished change (one clock and seed while developing, the full time-zone and seed sweep once at the end). Re-run only when the code they cover changed, and save the one-line result to a file so you, reviewers and the report reuse it instead of recomputing.
+- **One setup step per run.** Generate clients (for example `prisma generate`) and push schemas once per check script, not in every sub-script.
+- **Read diffs and files in pieces.** Start with `git diff --stat`, then read only the files or hunks you need (`git diff -- <file>`, `sed -n 120,200p`). Don't read a file over 300 lines in full; grep for the function first.
+- **Prefer text over pictures.** In a browser, read the page as text (`read_page`, `get_page_text`). Take a screenshot only to check layout, one per width, at half scale.
+- **Reuse, don't recompute.** When a number, a check result or a research fact already exists in a file or earlier message, cite it. Recompute only what the change touched.
 
 ## 3. Tests a product manager can read
 
@@ -118,7 +131,7 @@ If a project lacks a layer it needs, set it up rather than skip it. Run the suit
 
 ## 9. wcgw review: what will go wrong?
 
-Before calling a change done, and whenever someone asks for a wcgw review of a PR, branch or file, run the `wcgw` agent ([agents/wcgw.md](../../agents/wcgw.md)), one per PR, scoped to the change's own diff against its base. It reads other branches with `git show origin/<head>:<path>`, and doesn't check out branches or add worktrees. A fresh agent hasn't seen your reasoning, so it reads the change the way a reviewer will.
+Before calling a change done, and whenever someone asks for a wcgw review of a PR, branch or file, run the `wcgw` agent ([agents/wcgw.md](../../agents/wcgw.md)), once per PR on the finished change, scoped to the change's own diff against its base. After fixing its findings, don't start a fresh full review: the new failing-then-passing tests prove the fixes. It reads other branches with `git show origin/<head>:<path>`, and doesn't check out branches or add worktrees. A fresh agent hasn't seen your reasoning, so it reads the change the way a reviewer will.
 
 It only reads, reports only breakages it can prove from the spec, a test or a call site, and never suggests a fix. Finding nothing is a valid result.
 
@@ -139,7 +152,7 @@ If the agent isn't installed or subagents aren't available, follow agents/wcgw.m
 - [ ] Tests written first and seen failing for the right reason; none faked or written after the code
 - [ ] Unit, integration, end-to-end and (for UI) Playwright coverage as appropriate
 - [ ] A non-programmer could read the test names and bodies and follow them
-- [ ] Full suite, linter, type checker and duplication check all pass, locally
+- [ ] Full suite, linter, type checker and duplication check all pass, locally, in one final quiet run (section 2a)
 - [ ] wcgw agent run on the diff; every breakage proven by a failing test, then fixed
 - [ ] Full-word names, types apart from logic, short files and functions
 - [ ] Dependencies point inward; no business logic in adapters

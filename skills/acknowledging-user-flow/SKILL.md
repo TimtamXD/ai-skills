@@ -42,7 +42,9 @@ Before anything is built, the design is reviewed by the design lead and the UI/U
 | Rates, inflation or projections | an economics expert |
 | Code for the flow | a clean code and architecture reviewer |
 
-Run reviewers in parallel. Merge what they say into one list: agreed changes first, then real disagreements as decisions with a recommendation. Revise the boards, and only then build.
+Bring in only the experts the flow touches: the design lead and UI/UX always, then one row of the table per topic the flow really has. A small wording or layout change is usually two or three reviewers, not the whole panel. For finance work, run them through `finance-expert-panel`, which says how to keep each reviewer cheap.
+
+Run reviewers in parallel, once per design round. Give them the boards as text or a local copy of the artboard file, not screenshots. Merge what they say into one list: agreed changes first, then real disagreements as decisions with a recommendation. Revise the boards, and only then build. After revising, re-check only with the reviewers whose must-fix items changed the board.
 
 Decisions that change the person's money, data or security go to the person, put as one plain question with a recommended option.
 
@@ -50,7 +52,7 @@ Decisions that change the person's money, data or security go to the person, put
 
 - Build test-first (see `acknowledging-code-quality`). End-to-end and Playwright tests follow the designed flow, step by step, including its error and empty states.
 - Where the built screen differs from the board, either fix the code or update the board, and say which.
-- After building, check the built flow against the board at phone and desktop widths before calling it done.
+- After building, check the built flow against the board at phone and desktop widths before calling it done: read each screen as text, and take one half-scale screenshot per width for layout. The Playwright tests prove the steps, so don't click through the flow again by hand.
 
 ## 4. Definition of done
 
