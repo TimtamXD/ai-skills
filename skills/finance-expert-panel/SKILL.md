@@ -1,13 +1,13 @@
 ---
 name: finance-expert-panel
-description: Run the expert reviewers a piece of Budget Companion (or any Australian personal-finance app) work needs, chosen by topic from a panel of ten, in parallel on Haiku at max effort from one shared review pack, then merge their verdicts into one proposal. The panel is a design lead, a budgeting-app expert, a wealth-growth expert, a UI/UX expert, a financial-values expert, a CPA accountant, an Australian tax expert, an Australian government-policy expert, an Australian economics expert and a clean code and architecture reviewer (always on for code). Use when asked to audit, trim, review, validate or "get the experts/subagents to look at" app features, flows, numbers, designs or Claude Design artboards.
+description: Run the expert reviewers a piece of Budget Companion (or any Australian personal-finance app) work needs, chosen by topic from a panel of ten, in parallel on Haiku at medium effort from one shared review pack, then merge their verdicts into one proposal. The panel is a design lead, a budgeting-app expert, a wealth-growth expert, a UI/UX expert, a financial-values expert, a CPA accountant, an Australian tax expert, an Australian government-policy expert, an Australian economics expert and a clean code and architecture reviewer (always on for code). Use when asked to audit, trim, review, validate or "get the experts/subagents to look at" app features, flows, numbers, designs or Claude Design artboards.
 ---
 
 # Finance expert panel
 
 Ten reviewers look at the same work from different angles, in parallel, and you merge what they say into one proposal. They review; they never edit code, publish artifacts or post messages.
 
-**Model and effort:** start every reviewer with `model: "haiku"` and `effort: "max"`. The user asked for this to keep token use down. Don't use a bigger model for the panel unless the user asks.
+**Model and effort:** start every reviewer with `model: "haiku"` and `effort: "medium"`; give the accountant `effort: "high"` when the change touches money maths. Max effort was tried to save tokens and did the opposite: on 2026-11-16 each Haiku reviewer at max spent 8 to 18 minutes and 180k to 750k output tokens thinking (one read a single file and still wrote 305k). A review is reading and checking, not search, so medium is enough. Don't use a bigger model or a higher effort unless the user asks.
 
 **Run only the reviewers the work needs.** Each reviewer re-reads the work, so ten reviewers cost about ten times one. Pick them from the topic rules below ("Who to run"). Run all ten only for a whole-app audit, or when Tim asks for the full panel. A tax question needs only the accountant and the tax expert; a code change with no screen or money rule needs only the clean code reviewer and the accountant.
 
@@ -44,7 +44,7 @@ Name the chosen reviewers in the reply, so it's clear who looked and who didn't.
 - the one-line results already saved from the final check run, the real-data gate and any old-vs-new comparison;
 - the domain facts (category spend, accounts, rates, research files).
 
-Start each one with the Agent tool, using `subagent_type: "general-purpose"`, `model: "haiku"`, `effort: "max"` and `run_in_background: true`. Put all the chosen reviewers in the same message. Each prompt includes:
+Start each one with the Agent tool, using `subagent_type: "general-purpose"`, `model: "haiku"`, `effort: "medium"` and `run_in_background: true`. Put all the chosen reviewers in the same message. When three or fewer lenses look at a small change (under about 300 changed lines), run them as one reviewer with all the lenses, so the pack is read once. Each prompt includes:
 
 1. **The ask, in one paragraph:** what is being reviewed and what decision it feeds.
 2. **Where things are:**
@@ -53,7 +53,7 @@ Start each one with the Agent tool, using `subagent_type: "general-purpose"`, `m
    - **Dev server:** its local address, if one is running.
    - **Design reference:** the project's Claude Design canvases. Read them with the Artifact tool's `read` action, or pass local copies of the artboard files.
 3. **Guardrails:** "READ-ONLY: do not edit, commit, publish or install anything. Do NOT call any mcp__hearthbot__ tools."
-4. **Cost rules:** "Read the review pack first and trust its check results. Do not run tests, builds, the real-data gate, comparisons or a browser. Read other files only to prove a point, by grep or by line range, never a whole file over 300 lines or a whole log. Recompute only the figures the change touches."
+4. **Cost rules:** "Read the review pack first and trust its check results. Do not run tests, builds, the real-data gate, comparisons or a browser. Read other files only to prove a point, by grep or by line range, never a whole file over 300 lines or a whole log. Recompute only the figures the change touches. Stop after about 15 tool calls; if you need more, say what is missing instead."
 5. **The return format:** a verdict, a MUST-FIX list (concrete, with file paths or artboard names), a NICE-TO-HAVE list, and for audits a KEEP / MERGE INTO / MOVE TO / CUT verdict per page or section. Keep it under 450 words, and write the full report to a scratchpad file if it is longer.
 
 ## The ten reviewers

@@ -65,6 +65,8 @@ Every line a command prints is read again on every later turn, so noisy checks b
 - **One setup step per run.** Generate clients (for example `prisma generate`) and push schemas once per check script, not in every sub-script.
 - **Read diffs and files in pieces.** Start with `git diff --stat`, then read only the files or hunks you need (`git diff -- <file>`, `sed -n 120,200p`). Don't read a file over 300 lines in full; grep for the function first.
 - **Prefer text over pictures.** In a browser, read the page as text (`read_page`, `get_page_text`). Take a screenshot only to check layout, one per width, at half scale.
+- **Run the slow finishing steps side by side.** When the change is finished, start the final quiet check run in the background, and start the wcgw review and any expert reviewers in the same message. They read the diff, not the check output, so nobody waits on anybody.
+- **Short status updates.** A progress note is one or two lines. The final report leads with the result and stays under about 150 words; it names what the tests cover, not every test.
 - **Reuse, don't recompute.** When a number, a check result or a research fact already exists in a file or earlier message, cite it. Recompute only what the change touched.
 
 ## 3. Tests a product manager can read
