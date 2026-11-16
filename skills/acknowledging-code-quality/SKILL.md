@@ -87,10 +87,11 @@ Every line a command prints is read again on every later turn, so noisy checks b
 
 ## 5. Clean code
 
-- **Code explains itself; comments are the exception.**
-  - Good names, separated responsibilities and simple code should make comments unnecessary.
-  - Default to no comment: no headers restating a name, no section banners, no narration.
-  - Comment only what is genuinely unexplainable without one (a non-obvious why, an outside constraint, a workaround with a link), in one short line.
+- **No comments: names do the explaining.**
+  - No doc comments (`/** */`, docstrings) or inline comments. Business-like names for variables, functions, data classes and DB tables and columns carry the meaning instead.
+  - If a comment seems needed, rename or split until it isn't. `/** The contrast ratio between an element's border and what it sits on, see-through layers blended in. */` goes; `borderContrastAgainstBlendedBackground(...)` says it.
+  - The only exception is what no name can say (an outside constraint, a workaround with a link), in one short line starting `why:`. Tool directives (`eslint-disable`, `@ts-expect-error`) are fine.
+  - Enforce it: add a lint or checker rule that fails on any other comment, with existing ones on a shrink-only list.
 - **Names are full, readable words.**
   - Write `const recovery = computeRecovery(...)`, never `const r = ...`.
   - No single letters or abbreviations (`t`, `tx`, `amt`, `idx`, `acc`, `err`), including loop variables, callback parameters and destructured values.
@@ -156,6 +157,6 @@ If the agent isn't installed or subagents aren't available, follow agents/wcgw.m
 - [ ] wcgw agent run on the diff; every breakage proven by a failing test, then fixed
 - [ ] Full-word names, types apart from logic, short files and functions
 - [ ] Dependencies point inward; no business logic in adapters
-- [ ] No redundant comments
+- [ ] No comments beyond `why:` lines and tool directives; the no-comment check passes
 
 When reporting back, open with the tag. Then say what the tests cover (behaviours and failure modes), then the code change, then what the wcgw review found and what was done about each finding, then anything that wasn't test-first or was skipped.
