@@ -22,7 +22,15 @@ Install a mod at the prompt of a Claude Code terminal session:
 
 ## Install
 
-Copy a skill folder into your Claude skills directory:
+One command on a new machine (Linux, macOS or WSL; on Windows use `py` for `python3`). It copies the skills, agents, hook and mod into `~/.claude`, merges the hook and env into `settings.json` (backing up the old one to `settings.json.bak`), and adds the token rules to `~/.claude/CLAUDE.md`. Running it again changes nothing twice.
+
+```bash
+git clone https://github.com/TimtamXD/ai-skills.git && python3 ai-skills/setup/install.py
+```
+
+Tests: `python3 -m unittest` in `setup/`.
+
+Or copy a skill folder by hand:
 
 ```bash
 git clone https://github.com/TimtamXD/ai-skills.git
@@ -38,7 +46,7 @@ On Windows, copy the skill folders into `%USERPROFILE%\.claude\skills\` and the 
 Keeps long sessions from burning the usage limit. Set it up on every machine Claude Code runs on:
 
 - **[rules/token-budget.md](rules/token-budget.md):** paste into `~/.claude/CLAUDE.md`. One task per thread, heed the long-session warning, lean subagents.
-- **[hooks/long_session_warning](hooks/long_session_warning):** a `UserPromptSubmit` hook that warns on every prompt once a session carries over 150k tokens of context or has been open over 24 hours. Tests: `python3 -m unittest` in that folder.
+- **[hooks/long_session_warning](hooks/long_session_warning):** a `UserPromptSubmit` hook that acts on every prompt once a session carries over 150k tokens of context or has been open over 24 hours. In a project thread, a person's new message is handed to the coordinator for a fresh thread and the old thread resolves itself, with no button. In a plain Claude Code session it asks Claude for a bold warning and a button to a new session. Tests: `python3 -m unittest` in that folder.
 - **[mods/run-meter](mods/run-meter):** a Claude Code mod with a pane of tasks, subagents and spend, plus a toast after each turn when the session is over 150k tokens, open over a day, or a 5-hour or weekly limit passes 80%. Tests: `claude plugin test mods/run-meter`.
 
 Copy the hook to `~/.claude/hooks/long_session_warning/` and the mod to `~/.claude/mods/run-meter/`, then merge this into `~/.claude/settings.json` (on Windows, use `py` and full Windows paths):
@@ -58,3 +66,15 @@ Copy the hook to `~/.claude/hooks/long_session_warning/` and the mod to `~/.clau
 ```
 
 `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=20` compacts at about 200k tokens on a 1M window.
+
+### Cloud sessions (claude.ai/code)
+
+A cloud session starts from a fresh container, so `~/.claude` there is empty. In the cloud environment's settings, add this to its setup script, which runs before Claude starts, so the hook and rules apply from the first prompt:
+
+```bash
+git clone --depth 1 https://github.com/TimtamXD/ai-skills.git /tmp/ai-skills && python3 /tmp/ai-skills/setup/install.py
+```
+
+### Chats on claude.ai and the Claude app
+
+Web and app chats can't run hooks or read `CLAUDE.md`. Paste the text in [rules/claude-ai-profile.md](rules/claude-ai-profile.md) into claude.ai, Settings, Profile, "What personal preferences should Claude consider in responses?". It is a request, not a hook: nothing measures tokens there.
