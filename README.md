@@ -8,6 +8,18 @@ Tim's Claude skills: standing rules for how Claude builds software.
 | [`acknowledging-user-flow`](skills/acknowledging-user-flow/SKILL.md) | Anything a person sees or does is designed in Claude Design first, then reviewed by the design lead, UI/UX and the experts for that topic, then built from the design. Replies open with `**🧭 [acknowledging-user-flow] 🎨** Experts: …`. |
 | [`finance-expert-panel`](skills/finance-expert-panel/SKILL.md) | Reviews personal-finance app work with the experts its topic needs (design, budgeting, wealth, UI/UX, values, accountant, tax, policy, economics, clean code), on Haiku, from one shared review pack, then merges their verdicts into one proposal. |
 
+## Mods
+
+| Mod | What it does |
+|---|---|
+| [`project-progress`](mods/project-progress/README.md) | A pane in Claude Code listing every project thread's progress, with items waiting on Tim first. Threads write small status files; the pane refreshes every 30 seconds. |
+
+Install a mod at the prompt of a Claude Code terminal session:
+
+```
+/plugin install project-progress --marketplace TimtamXD/ai-skills
+```
+
 ## Install
 
 Copy a skill folder into your Claude skills directory:

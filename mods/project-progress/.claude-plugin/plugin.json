@@ -1,0 +1,20 @@
+{
+  "name": "project-progress",
+  "version": "0.1.0",
+  "description": "A pane showing every project thread's progress, items waiting on you first",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "statusFolder": {
+      "type": "string",
+      "title": "Status folder",
+      "description": "Folder the project threads write their status files to",
+      "default": "C:/Users/Arceu/repos/.claude-progress"
+    },
+    "pullFromGit": {
+      "type": "boolean",
+      "title": "Pull from git",
+      "description": "Run git pull in the status folder before each refresh, for statuses that cloud threads push to GitHub",
+      "default": false
+    }
+  }
+}
