@@ -24,10 +24,10 @@ Each thread writes one file, `<threadId>.json`, to the status folder (default `C
 
 ## Statuses from cloud threads
 
-Cloud threads can't write to the PC's disk, so they push their status files to the `progress-status` branch of this repo. Clone that branch as the status folder and turn on the `pullFromGit` option. The pane then runs `git pull --ff-only` before each refresh, and says so if a pull fails.
+Cloud threads can't write to the PC's disk, so they push their status files to the `progress-status` branch of a private repo (Tim's is `TimtamXD/budgetting-companion`, so thread titles stay private). Clone that branch as the status folder and turn on the `pullFromGit` option. The pane then runs `git pull --ff-only` before each refresh, and says so if a pull fails.
 
 ```
-git clone --branch progress-status --single-branch https://github.com/TimtamXD/ai-skills C:/Users/Arceu/repos/.claude-progress
+git clone --branch progress-status --single-branch https://github.com/TimtamXD/budgetting-companion C:/Users/Arceu/repos/.claude-progress
 ```
 
 ## Checks
