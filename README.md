@@ -39,7 +39,7 @@ cp -r ai-skills/skills/* ~/.claude/skills/
 cp ai-skills/agents/* ~/.claude/agents/
 ```
 
-On Windows, copy the skill folders into `%USERPROFILE%\.claude\skills\` and the agents into `%USERPROFILE%\.claude\agents\`. Claude Code picks them up in new sessions. Each skill folder holds one `SKILL.md`. `acknowledging-code-quality` section 2a holds the rules that keep checks cheap on tokens: quiet output, narrow test runs while working, and heavy gates once per merge. `agents/` holds the `wcgw` agent that `acknowledging-code-quality` runs.
+On Windows, copy the skill folders into `%USERPROFILE%\.claude\skills\` and the agents into `%USERPROFILE%\.claude\agents\`. Claude Code picks them up in new sessions. Each skill folder holds one `SKILL.md`. `acknowledging-code-quality` section 2a holds the rules that keep checks cheap on tokens: quiet output, narrow test runs while working, and heavy gates once per merge. Section 2b keeps a full build plus all tests under 10 minutes, with branches checking side by side. `agents/` holds the `wcgw` agent that `acknowledging-code-quality` runs.
 
 ## Token budget kit
 
