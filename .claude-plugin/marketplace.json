@@ -1,0 +1,5 @@
+{
+  "name": "ai-skills",
+  "owner": { "name": "Tim" },
+  "plugins": [{ "name": "project-progress", "source": "./mods/project-progress" }]
+}
