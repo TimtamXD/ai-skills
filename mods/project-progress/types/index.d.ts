@@ -22,6 +22,7 @@ export type ThreadCounts = Record<ThreadState, number>
 export type ProgressSnapshot = {
   threads: ThreadStatus[]
   isFolderReadable: boolean
+  isPullFailing: boolean
 }
 
 declare module 'claude-code' {

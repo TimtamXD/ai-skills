@@ -9,6 +9,12 @@
       "title": "Status folder",
       "description": "Folder the project threads write their status files to",
       "default": "C:/Users/Arceu/repos/.claude-progress"
+    },
+    "pullFromGit": {
+      "type": "boolean",
+      "title": "Pull from git",
+      "description": "Run git pull in the status folder before each refresh, for statuses that cloud threads push to GitHub",
+      "default": false
     }
   }
 }

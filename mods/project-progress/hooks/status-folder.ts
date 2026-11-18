@@ -11,7 +11,10 @@ async function readOneStatus($: EngineInterface, path: string): Promise<ThreadSt
   }
 }
 
-export async function readStatusFolder($: EngineInterface, folder: string): Promise<ProgressSnapshot> {
+export async function readStatusFolder(
+  $: EngineInterface,
+  folder: string,
+): Promise<Omit<ProgressSnapshot, 'isPullFailing'>> {
   try {
     const entries = await $.fs.list(folder)
     const statusFiles = entries.filter(entry => entry.kind === 'file' && entry.name.endsWith('.json'))
@@ -22,5 +25,14 @@ export async function readStatusFolder($: EngineInterface, folder: string): Prom
     return { threads: statuses.filter(status => status !== undefined), isFolderReadable: true }
   } catch {
     return { threads: [], isFolderReadable: false }
+  }
+}
+
+export async function pullLatestStatuses($: EngineInterface, folder: string): Promise<boolean> {
+  try {
+    const pulled = await $.process.run(['git', '-C', folder, 'pull', '--ff-only', '--quiet'])
+    return pulled.exitCode === 0
+  } catch {
+    return false
   }
 }

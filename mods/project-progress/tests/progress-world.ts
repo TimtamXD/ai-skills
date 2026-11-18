@@ -19,11 +19,15 @@ export const PANE = {
   },
 } as const
 
+const QUIET_RUN = { stdout: '', stderr: '', isStdoutTruncated: false, isStderrTruncated: false }
+
 export type ProgressWorld = {
   files: Map<string, string>
   statusLines: (string | undefined)[]
   isFolderMissing: boolean
   listedFolders: string[]
+  commandsRun: string[][]
+  isPullFailing: boolean
   clock: ReturnType<typeof mock.clock>
 }
 
@@ -33,6 +37,8 @@ export function setUpProgressWorld(on: On): ProgressWorld {
     statusLines: [],
     isFolderMissing: false,
     listedFolders: [],
+    commandsRun: [],
+    isPullFailing: false,
     clock: mock.clock(on, { now: NOW }),
   }
   on('command.register', () => ({ value: { command: 'progress' } }))
@@ -48,6 +54,10 @@ export function setUpProgressWorld(on: On): ProgressWorld {
     return {
       value: [...world.files.keys()].map(name => ({ name, kind: 'file' as const, size: 1, mtimeMs: NOW, isLink: false })),
     }
+  })
+  on('process.run', (_, event) => {
+    world.commandsRun.push([...event.argv])
+    return { value: { ...QUIET_RUN, exitCode: world.isPullFailing ? 1 : 0 } }
   })
   on('fs.read', (_, event) => ({
     value: world.files.get(event.path.split('/').pop() ?? '') ?? '',
