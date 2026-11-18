@@ -70,6 +70,20 @@ Every line a command prints is read again on every later turn, so noisy checks b
 - **Lean subagents.** Build and verify in the main session unless asked otherwise. A subagent gets a short brief with paths, not the conversation, runs on Sonnet (Haiku for reviews) and stops at about 60 tool calls. A new, unrelated task goes to a new thread or session.
 - **Reuse, don't recompute.** When a number, a check result or a research fact already exists in a file or earlier message, cite it. Recompute only what the change touched.
 
+## 2b. Fast checks: 10 minutes, side by side
+
+A full build plus every test must finish in 10 minutes or less, in any project, however big. Many branches check at once, and each failure must still trace to its branch.
+
+- **Time every stage.** The check script prints one line per stage (install, generate, typecheck, lint, unit, build, e2e) with its seconds, and a total. Over 10 minutes is a failing check: make it fast before any other work, then carry on.
+- **Parallel by default.** Run independent stages at the same time (typecheck, lint and unit tests don't wait on each other). Use every test runner's workers: Vitest threads or forks pool with tests isolated per file, Playwright `fullyParallel` with several workers, pytest `-n auto`, `cargo nextest`. A test that can't run in parallel is a bug in the test: give it its own data.
+- **E2E against one production build.** Build once, start one production server (`next start`, not `next dev`), and point every Playwright worker at it. Never compile on demand during a test run.
+- **Cache and go incremental.** Incremental type checking (`tsc --incremental` with a per-worktree build-info file), lint and test caches, the build cache, and installs from the lockfile. Skip a stage whose inputs haven't changed since it last passed.
+- **Each branch gets its own everything.** Every worktree or branch derives its own ports, test database and temp folders from its name, so checks run side by side, never queued. No global lock: lock only a truly shared step (such as writing a shared generated client), narrowly and briefly, with a timeout.
+- **Timeboxed and clean.** Every stage has a time limit and fails loudly when it hits it. The script starts its own servers, never reuses one already running on a port, and kills everything it started on exit, error or interrupt (`trap`). A busy port fails at once and names the process holding it.
+- **Results trace to their branch.** Each run writes its log and a one-line summary (branch, commit, pass/fail, timings) to a per-branch file, so a failure among many parallel runs points straight at its branch.
+- **One tracked check script.** The script lives in the repo (`npm run check` or `scripts/check.sh`) and every branch runs that copy. Never hand-copy an untracked script into worktrees.
+- **Cap concurrency to the machine.** Size workers and parallel branch runs to the CPU cores and memory available (for example cores minus one, split across running branches), so parallel runs don't thrash and turn slow or flaky.
+
 ## 3. Tests a product manager can read
 
 - **Plain-English names:** each test's name says the behaviour it protects, e.g. `rejects a booking that ends before it starts`, not `test_validate_2`.
@@ -158,6 +172,7 @@ If the agent isn't installed or subagents aren't available, follow agents/wcgw.m
 - [ ] Unit, integration, end-to-end and (for UI) Playwright coverage as appropriate
 - [ ] A non-programmer could read the test names and bodies and follow them
 - [ ] Full suite, linter, type checker and duplication check all pass, locally, in one final quiet run (section 2a)
+- [ ] Full build plus all tests finish in 10 minutes or less, with per-stage timings, from the repo's tracked check script on the branch's own ports and data (section 2b)
 - [ ] wcgw agent run on the diff; every breakage proven by a failing test, then fixed
 - [ ] Full-word names, types apart from logic, short files and functions
 - [ ] UI built from shared components on theme tokens; no inline styles or repeated styling
