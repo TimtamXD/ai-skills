@@ -60,7 +60,7 @@ export function setUpProgressWorld(on: On): ProgressWorld {
     return { value: { ...QUIET_RUN, exitCode: world.isPullFailing ? 1 : 0 } }
   })
   on('fs.read', (_, event) => ({
-    value: world.files.get(event.path.split('/').pop() ?? '') ?? '',
+    value: world.files.get(event.path.split(/[\\/]/).pop() ?? '') ?? '',
   }))
 
   return world

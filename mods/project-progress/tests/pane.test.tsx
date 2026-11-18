@@ -109,6 +109,6 @@ describe('the project progress pane', () => {
 
     await $.session.start(START)
 
-    expect(world.listedFolders).toContain('/status/elsewhere')
+    expect(world.listedFolders.some(folder => /[\\/]status[\\/]elsewhere$/.test(folder))).toBe(true)
   })
 })
