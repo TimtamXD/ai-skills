@@ -69,7 +69,8 @@ def build_hook_reply(transcript_path, now_text):
         f"{build_warning_line(latest_context, age_hours)} "
         "Then give the person a button that moves the next task to a fresh thread with a short brief, "
         "never a bare suggestion: in a project thread, a decision card whose 'Start a new thread' option "
-        "asks the coordinator to open one; in a Claude Code session, a start_session proposal card."
+        "asks the coordinator to open one; in a Claude Code session, a start_session proposal card. "
+        "If no tool can draw a button, offer to hand the next task to a new thread yourself and say so."
     )
     return {
         "systemMessage": summary,
