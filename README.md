@@ -20,3 +20,29 @@ cp ai-skills/agents/* ~/.claude/agents/
 ```
 
 On Windows, copy the skill folders into `%USERPROFILE%\.claude\skills\` and the agents into `%USERPROFILE%\.claude\agents\`. Claude Code picks them up in new sessions. Each skill folder holds one `SKILL.md`. `acknowledging-code-quality` section 2a holds the rules that keep checks cheap on tokens: quiet output, narrow test runs while working, and heavy gates once per merge. `agents/` holds the `wcgw` agent that `acknowledging-code-quality` runs.
+
+## Token budget kit
+
+Keeps long sessions from burning the usage limit. Set it up on every machine Claude Code runs on:
+
+- **[rules/token-budget.md](rules/token-budget.md):** paste into `~/.claude/CLAUDE.md`. One task per thread, heed the long-session warning, lean subagents.
+- **[hooks/long_session_warning](hooks/long_session_warning):** a `UserPromptSubmit` hook that warns on every prompt once a session carries over 150k tokens of context or has been open over 24 hours. Tests: `python3 -m unittest` in that folder.
+- **[mods/run-meter](mods/run-meter):** a Claude Code mod with a pane of tasks, subagents and spend, plus a toast after each turn when the session is over 150k tokens, open over a day, or a 5-hour or weekly limit passes 80%. Tests: `claude plugin test mods/run-meter`.
+
+Copy the hook to `~/.claude/hooks/long_session_warning/` and the mod to `~/.claude/mods/run-meter/`, then merge this into `~/.claude/settings.json` (on Windows, use `py` and full Windows paths):
+
+```json
+{
+  "env": {
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "20",
+    "CLAUDE_CODE_PLUGIN_DIRS": "/home/you/.claude/mods/run-meter"
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      { "hooks": [{ "type": "command", "command": "python3 -I /home/you/.claude/hooks/long_session_warning/long_session_warning.py", "timeout": 10 }] }
+    ]
+  }
+}
+```
+
+`CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=20` compacts at about 200k tokens on a 1M window.

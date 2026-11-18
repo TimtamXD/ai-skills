@@ -67,6 +67,7 @@ Every line a command prints is read again on every later turn, so noisy checks b
 - **Prefer text over pictures.** In a browser, read the page as text (`read_page`, `get_page_text`). Take a screenshot only to check layout, one per width, at half scale.
 - **Run the slow finishing steps side by side.** When the change is finished, start the final quiet check run in the background, and start the wcgw review and any expert reviewers in the same message. They read the diff, not the check output, so nobody waits on anybody.
 - **Short status updates.** A progress note is one or two lines. The final report leads with the result and stays under about 150 words; it names what the tests cover, not every test.
+- **Lean subagents.** Build and verify in the main session unless asked otherwise. A subagent gets a short brief with paths, not the conversation, runs on Sonnet (Haiku for reviews) and stops at about 60 tool calls. A new, unrelated task goes to a new thread or session.
 - **Reuse, don't recompute.** When a number, a check result or a research fact already exists in a file or earlier message, cite it. Recompute only what the change touched.
 
 ## 3. Tests a product manager can read
