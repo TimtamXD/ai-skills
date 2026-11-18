@@ -11,6 +11,8 @@ Ten reviewers look at the same work from different angles, in parallel, and you 
 
 **Run only the reviewers the work needs.** Each reviewer re-reads the work, so ten reviewers cost about ten times one. Pick them from the topic rules below ("Who to run"). Run all ten only for a whole-app audit, or when Tim asks for the full panel. A tax question needs only the accountant and the tax expert; a code change with no screen or money rule needs only the clean code reviewer and the accountant.
 
+**Fixers and verifiers are not panel members.** The panel only reviews. Don't start Opus subagents to apply its fixes or to verify them: do the fixes in the main session, and let the final quiet check run plus a re-run of the reviewers who raised a must-fix be the verification. If Tim asks for a separate builder or verifier, run it on Sonnet with a short brief and a cap of about 60 tool calls. On 2026-11-18 one Opus verifier made 1,410 calls and used 676M tokens.
+
 ## Who to run
 
 | The work | Reviewers |

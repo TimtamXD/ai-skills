@@ -1,0 +1,7 @@
+{
+  "name": "run-meter",
+  "version": "0.1.0",
+  "description": "Progress bars for tasks, skills and subagent runs, with tokens used and estimated cost per model, colour-coded against a budget",
+  "license": "MIT",
+  "types": "./types/index.d.ts"
+}
