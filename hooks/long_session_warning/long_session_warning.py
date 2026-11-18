@@ -47,6 +47,13 @@ def describe_problems(latest_context, age_hours):
     return problems
 
 
+def build_warning_line(latest_context, age_hours):
+    facts = [f"{latest_context // 1000}k tokens"]
+    if age_hours >= AGE_WARNING_HOURS:
+        facts.append(f"open {int(age_hours)} hours")
+    return f"**[⚠️ Long thread: {', '.join(facts)}. Use the button below to start the next task fresh.]**"
+
+
 def build_hook_reply(transcript_path, now_text):
     entries = read_entries(transcript_path)
     if not entries:
@@ -58,8 +65,11 @@ def build_hook_reply(transcript_path, now_text):
         return None
     summary = "Long session: " + " and ".join(problems) + ". Every message re-reads all of it."
     instructions = (
-        f"{summary} Put a one-line warning as the first line of your reply to the person, "
-        "and suggest moving the next task to a new thread (or a new session) instead of this one."
+        f"{summary} Make this exact bold line the first line of your reply: "
+        f"{build_warning_line(latest_context, age_hours)} "
+        "Then give the person a button that moves the next task to a fresh thread with a short brief, "
+        "never a bare suggestion: in a project thread, a decision card whose 'Start a new thread' option "
+        "asks the coordinator to open one; in a Claude Code session, a start_session proposal card."
     )
     return {
         "systemMessage": summary,

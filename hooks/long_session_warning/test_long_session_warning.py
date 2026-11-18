@@ -60,6 +60,15 @@ class LongSessionWarningTest(unittest.TestCase):
         self.assertIn("new thread", instructions)
         self.assertIn("first line", instructions)
 
+    def test_the_warning_is_a_bold_bracketed_line_with_a_button_to_a_new_thread(self):
+        transcript = write_transcript([user_turn(FRESH_START), assistant_turn(NOW, 240_000)])
+
+        reply = build_hook_reply(transcript, NOW)
+
+        instructions = reply["hookSpecificOutput"]["additionalContext"]
+        self.assertIn("**[⚠️ Long thread: 240k tokens", instructions)
+        self.assertIn("button", instructions)
+
     def test_a_missing_transcript_gets_no_warning_instead_of_an_error(self):
         reply = build_hook_reply("C:/nowhere/missing.jsonl", NOW)
 
