@@ -45,7 +45,7 @@ On Windows, copy the skill folders into `%USERPROFILE%\.claude\skills\` and the 
 
 Keeps long sessions from burning the usage limit. Set it up on every machine Claude Code runs on:
 
-- **[rules/token-budget.md](rules/token-budget.md):** paste into `~/.claude/CLAUDE.md`. One task per thread, heed the long-session warning, [OLD-xx]/[NEW-xx] handoff titles, lean subagents.
+- **[rules/token-budget.md](rules/token-budget.md):** paste into `~/.claude/CLAUDE.md`. One task per thread, heed the long-session warning, OLD/NEW handoff titles, lean subagents.
 - **[hooks/long_session_warning](hooks/long_session_warning):** a `UserPromptSubmit` hook that acts on every prompt once a session carries over 150k tokens of context or has been open over 24 hours. In a project thread, a person's new message is handed to the coordinator for a fresh thread and the old thread resolves itself, with no button. In a plain Claude Code session it asks Claude for a bold warning and a button to a new session. Tests: `python3 -m unittest` in that folder.
 - **[mods/run-meter](mods/run-meter):** a Claude Code mod with a pane of tasks, subagents and spend, plus a toast after each turn when the session is over 150k tokens, open over a day, or a 5-hour or weekly limit passes 80%. Tests: `claude plugin test mods/run-meter`.
 
